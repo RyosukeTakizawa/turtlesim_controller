@@ -6,5 +6,10 @@
         <param name="mode" value="circle" type="string" />
         <remap from="/turtle1/cmd_vel" to="/turtle1/cmd_vel" />
     </node>
+
+    <node pkg="rosservice" type="rosservice" name="service" args="call /spawn 4 4 0 turtle2" />
+    <node pkg="turtlesim" type="turtle_teleop_key" name="teleop_key" >
+        <remap from="/turtle1/cmd_vel" to="/turtle2/cmd_vel" />
+    </node>
 </launch>
 

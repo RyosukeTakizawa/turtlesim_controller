@@ -6,6 +6,9 @@ TurtlesimController::TurtlesimController() : private_nh("~")
     private_nh.param("hz", hz, {10});
     private_nh.param("mode", mode, {"circle"});
 
+    // subscriber
+    pose_sub = nh.subscribe("/turtle1/pose", 1, &TurtlesimController::pose_callback, this);
+
     // publisher
     cmd_vel_pub = nh.advertise<geometry_msgs::Twist>("/turtle1/cmd_vel", 1);
 
@@ -13,6 +16,12 @@ TurtlesimController::TurtlesimController() : private_nh("~")
     std::cout << "=== turtlesim_controller ===" << std::endl;
     std::cout << "hz: " << hz << std::endl;
     std::cout << std::endl;
+}
+
+void TurtlesimController::pose_callback(const turtlesim::PoseConstPtr &msg)
+{
+    current_pose = *msg;
+    std::cout << "current_pose:( " << current_pose.x << ", " << current_pose.y << ", " << current_pose.theta << ")" << std::endl;
 }
 
 geometry_msgs::Twist TurtlesimController::draw_circle()
@@ -42,9 +51,9 @@ void TurtlesimController::process()
 
         cmd_vel_pub.publish(twist);
 
-        std::cout << "--- publish ---" << std::endl;
-        std::cout << "linear.x:  " << twist.linear.x << std::endl;
-        std::cout << "angular.z: " << twist.angular.z << std::endl;
+        //std::cout << "--- publish ---" << std::endl;
+        //std::cout << "linear.x:  " << twist.linear.x << std::endl;
+        //std::cout << "angular.z: " << twist.angular.z << std::endl;
 
         ros::spinOnce();
         loop_rate.sleep();

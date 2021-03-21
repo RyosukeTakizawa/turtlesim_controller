@@ -1,4 +1,4 @@
-#include "turtlesim_controller.h"
+#include "turtlesim_controller/turtlesim_controller.h"
 
 TurtlesimController::TurtlesimController() : private_nh("~")
 {

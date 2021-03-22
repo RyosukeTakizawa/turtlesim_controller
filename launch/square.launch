@@ -3,6 +3,7 @@
     <node pkg="turtlesim" type="turtlesim_node" name="sim" />
     <node pkg="turtlesim_controller" type="turtlesim_controller" name="turtlesim_controller" output="screen" >
         <param name="hz" value="60" type="double" />
+        <param name="controller_time" value="60" type="double" />
         <param name="mode" value="square" type="string" />
         <param name="value_x" value="1.0" type="double" />
         <param name="value_z" value="0.2" type="double" />

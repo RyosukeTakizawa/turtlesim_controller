@@ -22,6 +22,7 @@ private:
     // parameter
     ros::NodeHandle private_nh;
     double hz;
+    double controller_time;
     std::string mode;
     double value_x;
     double value_z;

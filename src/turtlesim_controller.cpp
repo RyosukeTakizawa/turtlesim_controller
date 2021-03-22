@@ -4,6 +4,7 @@ TurtlesimController::TurtlesimController() : private_nh("~")
 {
     // parameter
     private_nh.param("hz", hz, {10});
+    private_nh.param("controller_time", controller_time, {60});
     private_nh.param("mode", mode, {"circle"});
     private_nh.param("value_x", value_x, {1.0});
     private_nh.param("value_z", value_z, {1.0});
@@ -22,6 +23,7 @@ TurtlesimController::TurtlesimController() : private_nh("~")
     // print parameter
     std::cout << "=== turtlesim_controller ===" << std::endl;
     std::cout << "hz: " << hz << std::endl;
+    std::cout << "controller_time: " << controller_time << std::endl;
     std::cout << "mode: " << mode << std::endl;
     std::cout << "value_x: " << value_x << std::endl;
     std::cout << "value_z: " << value_z << std::endl;
@@ -121,7 +123,7 @@ void TurtlesimController::process()
 
         loop_rate.sleep();
 
-        if(ros::Time::now() - start > ros::Duration(60))
+        if(ros::Time::now() - start > ros::Duration(controller_time))
             break;
     }
 }

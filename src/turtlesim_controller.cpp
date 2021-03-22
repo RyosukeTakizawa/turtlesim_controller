@@ -36,6 +36,7 @@ geometry_msgs::Twist TurtlesimController::draw_circle()
 void TurtlesimController::process()
 {
     ros::Rate loop_rate(hz);
+    ros::Time start = ros::Time::now();
 
     while(ros::ok())
     {
@@ -57,6 +58,9 @@ void TurtlesimController::process()
 
         ros::spinOnce();
         loop_rate.sleep();
+
+        if(ros::Time::now() - start > ros::Duration(10))
+            break;
     }
 }
 

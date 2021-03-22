@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="turtlesim" type="turtlesim_node" name="sim" />
+    <node pkg="turtlesim_controller" type="turtlesim_controller" name="turtlesim_controller" output="screen" >
+        <param name="hz" value="60" type="double" />
+        <param name="controller_time" value="300" type="double" />
+        <param name="mode" value="triangle" type="string" />
+        <param name="value_x" value="1.0" type="double" />
+        <param name="value_z" value="0.1" type="double" />
+        <param name="triangle_x1" value="5.0" type="double" />
+        <param name="triangle_y1" value="10.0" type="double" />
+        <param name="triangle_x2" value="1.0" type="double" />
+        <param name="triangle_y2" value="1.0" type="double" />
+        <param name="triangle_x3" value="10.0" type="double" />
+        <param name="triangle_y3" value="1.0" type="double" />
+        <remap from="/turtle1/cmd_vel" to="/turtle1/cmd_vel" />
+    </node>
+    <node pkg="rosservice" type="rosservice" name="service" args="call /spawn 5 10 0 turtle2" />
+</launch>
+

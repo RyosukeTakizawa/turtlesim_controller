@@ -18,6 +18,7 @@ private:
     void record_reset();
     geometry_msgs::Twist draw_circle();
     geometry_msgs::Twist draw_square();
+    geometry_msgs::Twist draw_triangle();
 
     // parameter
     ros::NodeHandle private_nh;
@@ -28,6 +29,13 @@ private:
     double value_z;
 
     double square_length;
+
+    double triangle_x1;
+    double triangle_y1;
+    double triangle_x2;
+    double triangle_y2;
+    double triangle_x3;
+    double triangle_y3;
 
     // member
     ros::NodeHandle nh;

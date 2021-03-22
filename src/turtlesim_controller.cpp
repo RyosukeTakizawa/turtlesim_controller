@@ -9,6 +9,12 @@ TurtlesimController::TurtlesimController() : private_nh("~")
     private_nh.param("value_x", value_x, {1.0});
     private_nh.param("value_z", value_z, {1.0});
     private_nh.param("square_length", square_length, {1.0});
+    private_nh.param("triangle_x1", triangle_x1, {1.0});
+    private_nh.param("triangle_y1", triangle_y1, {1.0});
+    private_nh.param("triangle_x2", triangle_x2, {10.0});
+    private_nh.param("triangle_y2", triangle_y2, {1.0});
+    private_nh.param("triangle_x3", triangle_x3, {1.0});
+    private_nh.param("triangle_y3", triangle_y3, {10.0});
 
     //initialize
     record_distance = 0;
@@ -31,6 +37,12 @@ TurtlesimController::TurtlesimController() : private_nh("~")
     if (mode == "square")
     {
         std::cout << "square_length: " << square_length << std::endl;
+    }
+    else if(mode == "triangle")
+    {
+        std::cout << "triangle1: ( " << triangle_x1 << ", " << triangle_y1 << ")" << std::endl;
+        std::cout << "triangle2: ( " << triangle_x2 << ", " << triangle_y2 << ")" << std::endl;
+        std::cout << "triangle3: ( " << triangle_x3 << ", " << triangle_y3 << ")" << std::endl;
     }
 
     std::cout << std::endl;
@@ -92,6 +104,57 @@ geometry_msgs::Twist TurtlesimController::draw_square()
     return twist;
 }
 
+geometry_msgs::Twist TurtlesimController::draw_triangle()
+{
+    static int point_number = 0;
+    double target_x, target_y;
+    switch(point_number)
+    {
+        case 0:
+            target_x = triangle_x1;
+            target_y = triangle_y1;
+            break;
+        case 1:
+            target_x = triangle_x2;
+            target_y = triangle_y2;
+            break;
+        case 2:
+            target_x = triangle_x3;
+            target_y = triangle_y3;
+            break;
+        default:
+            target_x = 0.0;
+            target_y = 0.0;
+            break;
+    }
+
+    double target_theta = atan2(target_y - current_pose.y, target_x - current_pose.x);
+    std::cout << "target: (" << target_x << ", " << target_y << ", " << target_theta << ")" << std::endl;
+    std::cout << "current: (" << current_pose.x << ", " << current_pose.y << ", " << current_pose.theta << ")" << std::endl;
+
+    geometry_msgs::Twist twist;
+
+    if(abs(target_theta - current_pose.theta) > 1e-2)
+    {
+        twist.linear.x = 0.0;
+        twist.angular.z = value_z;
+    }
+    else
+    {
+        twist.linear.x = value_x;
+        twist.angular.z = 0.0;
+    }
+
+    if(sqrt(pow(target_x - current_pose.x, 2) + pow(target_y - current_pose.y, 2)) < 1e-2)
+    {
+        point_number++;
+        if(point_number > 2)
+            point_number = 0;
+    }
+
+    return twist;
+}
+
 void TurtlesimController::process()
 {
     ros::Rate loop_rate(hz);
@@ -110,9 +173,14 @@ void TurtlesimController::process()
         {
             twist = draw_square();
         }
+        else if(mode == "triangle")
+        {
+            twist = draw_triangle();
+        }
         else
         {
             std::cout << "invalid mode" << std::endl;
+            break;
         }
 
         cmd_vel_pub.publish(twist);
